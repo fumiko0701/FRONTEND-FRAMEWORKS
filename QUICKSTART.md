@@ -1,8 +1,8 @@
 # Guia Rápido de Uso
 
-## 🚀 Início Rápido
+## Início Rápido
 
-### Instalação (Primeira vez)
+### Instalação (primeira vez)
 ```bash
 # 1. Clonar o repositório
 git clone <url-do-repositorio>
@@ -17,21 +17,21 @@ npm install
 cd ..
 ```
 
-### Executar o Projeto
+### Executar o projeto
 
-#### Desenvolvimento (Recomendado)
+#### Desenvolvimento (recomendado)
 ```bash
 npm run dev
 ```
 - Frontend: http://localhost:3000
-- Backend API: http://localhost:5000
+- Backend: http://localhost:5000
 
-#### Apenas Backend
+#### Apenas backend
 ```bash
 npm run server
 ```
 
-#### Apenas Frontend
+#### Apenas frontend
 ```bash
 npm run client
 ```
@@ -45,59 +45,57 @@ npm run build
 NODE_ENV=production npm start
 ```
 
-## 📝 Como Adicionar seu Backend Existente
+## Como adicionar seu backend existente
 
-1. Copie suas rotas e lógica de negócio para `server.js` ou crie novos arquivos
-2. Adicione suas dependências ao `package.json`
-3. Configure suas variáveis de ambiente (crie um arquivo `.env`)
-4. Atualize as chamadas de API no frontend React (`client/src/App.js`)
+1. Copie rotas e lógica para `server.js` ou crie novos arquivos.
+2. Adicione dependências em `package.json`.
+3. Configure variáveis de ambiente (`.env`).
+4. Atualize chamadas de API no frontend (`client/src/App.js`).
 
-Exemplo de nova rota:
+Exemplo de rota:
 ```javascript
 // Em server.js
 app.get('/api/meus-dados', (req, res) => {
-  // Sua lógica aqui
   res.json({ dados: 'seus dados' });
 });
 ```
 
-## 📁 Estrutura do Projeto
+## Estrutura do projeto
 
 ```
 FRONTEND-FRAMEWORKS/
-├── server.js              # Servidor Express (Backend)
-├── package.json           # Dependências do backend
-├── client/                # Aplicação React (Frontend)
+├── server.js
+├── package.json
+├── client/
 │   ├── src/
-│   │   ├── App.js        # Componente principal
-│   │   └── App.css       # Estilos
-│   └── package.json      # Dependências do frontend
-└── README.md             # Documentação completa
+│   │   ├── App.js
+│   │   └── App.css
+│   └── package.json
+└── README.md
 ```
 
-## 🔌 API Endpoints Disponíveis
+## API disponíveis
 
-- `GET /api/hello` - Mensagem de saudação
-- `GET /api/status` - Status do servidor
+- GET /api/hello — Mensagem de saudação
+- GET /api/status — Status do servidor
 
-## 💡 Dicas
+## Dicas rápidas
 
-1. Use `npm run dev` durante o desenvolvimento para ver mudanças em tempo real
-2. O proxy está configurado para redirecionar `/api/*` do frontend (porta 3000) para o backend (porta 5000)
-3. Modifique `client/src/App.js` para personalizar o frontend
-4. Adicione suas rotas em `server.js` para personalizar o backend
+- Use `npm run dev` para desenvolvimento com reload.
+- Proxy: `/api/*` do frontend (3000) redireciona para backend (5000).
+- Edite `client/src/App.js` para personalizar o frontend.
+- Adicione rotas em `server.js` para o backend.
 
-## 🆘 Problemas Comuns
+## Problemas comuns
 
-### Porta já em uso
-Se a porta 3000 ou 5000 já estiver em uso, você pode:
-- Matar o processo usando a porta: `lsof -ti:3000 | xargs kill` (Mac/Linux)
-- Ou mudar a porta no código
+Porta já em uso:
+- Matar processo (Mac/Linux): `lsof -ti:3000 | xargs kill`
+- Ou alterar a porta no código.
 
-### Erro ao conectar com o backend
-- Verifique se o servidor backend está rodando
-- Confirme que o proxy está configurado em `client/package.json`
+Erro ao conectar com o backend:
+- Verifique se o backend está em execução.
+- Confirme o proxy em `client/package.json`.
 
-## 📚 Mais Informações
+## Mais informações
 
-Veja o [README.md](README.md) para documentação completa.
+Consulte o README.md para a documentação completa.

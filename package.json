@@ -1,24 +1,25 @@
 {
-  "name": "frontend-frameworks",
+  "name": "fullstack-event-app",
   "version": "1.0.0",
-  "description": "Simple React + Node.js + Express full-stack application",
+  "type": "module",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "server": "node server.js",
+    "server": "npx nodemon server.js",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "build": "npm run build --prefix client",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npm run build --prefix client"
   },
-  "keywords": ["react", "express", "nodejs", "fullstack"],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^3.0.3",
     "cors": "^2.8.5",
-    "express": "^5.1.0"
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.16.3",
+    "pg-pool": "^3.10.1"
   },
   "devDependencies": {
-    "concurrently": "^9.2.1"
+    "concurrently": "^9.2.1",
+    "nodemon": "^3.1.10"
   }
 }

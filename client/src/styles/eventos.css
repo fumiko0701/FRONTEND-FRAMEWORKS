@@ -1,0 +1,16 @@
+/* /client/src/styles/eventos.css */
+.eventos-container {
+  padding: 20px;
+}
+
+.eventos-lista {
+  list-style: none;
+  padding: 0;
+}
+
+.evento-item {
+  padding: 12px;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
