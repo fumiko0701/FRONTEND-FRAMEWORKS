@@ -3,14 +3,46 @@ import axios from "axios";
 // TOKEN TEMPORÁRIO FIXO (para testes)
 const TOKEN_TESTE = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c3VhcmlvIjoxMiwiZW1haWwiOiJ3YWxsc2NvdmVyZWRpbmJsb29kQGFsdGVyLm55YSIsInRpcG8iOiJvcmdhbml6YWRvciIsImlhdCI6MTc2MzQyOTYwMCwiZXhwIjoxNzYzNDM2ODAwfQ.vDjwU021PdvN_r5ITdeFGDDuS7Ln9GSN7vy4YKzYqto";
 
+// Use variável de ambiente para poder apontar para backend remoto quando necessário
+const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:3001";
+
 const api = axios.create({
-  baseURL: "http://localhost:3001",
+  baseURL: BASE_URL,
+  timeout: 8000, // timeout em ms
 });
 
 // Sempre envia o TOKEN_TESTE no Authorization
 api.interceptors.request.use((config) => {
+  config.headers = config.headers || {};
   config.headers.Authorization = `Bearer ${TOKEN_TESTE}`;
   return config;
 });
+
+// Retry interceptor simples com backoff exponencial para erros de rede
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const config = error.config;
+    // se não há config ou já tentamos demais, rejeita
+    if (!config) return Promise.reject(error);
+
+    config.__retryCount = config.__retryCount || 0;
+    const MAX_RETRIES = 3;
+
+    // re-tenta apenas em erros de rede (sem response) ou status 429/5xx
+    const shouldRetry =
+      !error.response ||
+      (error.response && (error.response.status >= 500 || error.response.status === 429));
+
+    if (shouldRetry && config.__retryCount < MAX_RETRIES) {
+      config.__retryCount += 1;
+      const delay = Math.min(2000 * 2 ** (config.__retryCount - 1), 8000); // 2s,4s,8s
+      await new Promise((res) => setTimeout(res, delay));
+      return api(config);
+    }
+
+    return Promise.reject(error);
+  }
+);
 
 export default api;
