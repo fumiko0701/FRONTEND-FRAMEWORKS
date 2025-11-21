@@ -1,0 +1,65 @@
+/* ============================== */
+/* OVERLAY */
+/* ============================== */
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+
+  /* animação suave */
+  opacity: 0;
+  transition: opacity 0.45s ease-in-out;
+}
+
+.loading-overlay.fade-in {
+  opacity: 1;
+}
+
+.loading-overlay.fade-out {
+  opacity: 0;
+}
+
+/* ============================== */
+/* ÍCONE DO PNG ANIMADO */
+/* ============================== */
+
+.loading-icon {
+  width: 82px;   /* ligeiramente menor */
+  height: 82px;
+  opacity: 0;
+  animation: spin 2.8s linear infinite;
+  transition: opacity 0.45s ease-in-out, transform 0.45s ease-in-out;
+}
+
+/* aparece com leve zoom e fade */
+.loading-icon.scale-in {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* desaparece suavemente com zoom-out */
+.loading-icon.scale-out {
+  opacity: 0;
+  transform: scale(0.85);
+}
+
+/* ============================== */
+/* ROTAÇÃO */
+/* ============================== */
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-360deg);
+  }
+}
