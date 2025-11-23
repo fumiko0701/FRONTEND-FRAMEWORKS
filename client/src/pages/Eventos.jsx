@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import api from "../services/api";
 import "../styles/eventos.css";
-import Loading from "../components/Loading";   // <<< ADICIONADO
+import Loading from "../components/Loading";
 
 function formatDateRange(startIso, endIso) {
   try {
@@ -28,7 +28,7 @@ function formatDateRange(startIso, endIso) {
 
 export default function Eventos() {
   const [eventos, setEventos] = useState([]);
-  const [loading, setLoading] = useState(true); // <<< já existia
+  const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState("");
 
   const carregarEventos = useCallback(async () => {
@@ -43,23 +43,15 @@ export default function Eventos() {
             descricao: ev.descricao ?? "",
             dataInicio: ev.data_inicio ?? ev.data ?? null,
             dataFim: ev.data_fim ?? null,
-            visibilidade: ev.visibilidade ?? null,
-            statusInterno: ev.status_interno ?? null,
-            raw: ev,
           }))
         : [];
+
       setEventos(dados);
     } catch (error) {
       console.error("Erro ao carregar eventos:", error);
-      if (error?.response) {
-        setErro(`Erro ${error.response.status}: ${error.response.statusText || "Problema no servidor"}`);
-      } else if (error?.request) {
-        setErro("Falha de rede: não foi possível conectar ao servidor.");
-      } else {
-        setErro("Não foi possível carregar os eventos.");
-      }
+      setErro("Não foi possível carregar os eventos.");
     } finally {
-      setLoading(false); // <<< ativa/desativa o loader
+      setLoading(false);
     }
   }, []);
 
@@ -69,39 +61,41 @@ export default function Eventos() {
 
   return (
     <>
-      {/* LOADING UNIVERSAL */}
       <Loading active={loading} />
 
+      {/* 🔶 HEADER BONITO */}
+      <header className="eventos-header">
+        <h1>Eventos Disponíveis</h1>
+      </header>
+
       {erro && (
-        <div style={{ padding: 12 }}>
-          <p style={{ color: "red" }}>{erro}</p>
+        <div className="erro-box">
+          <p>{erro}</p>
           <button onClick={carregarEventos}>Tentar novamente</button>
         </div>
       )}
 
       <div className="eventos-container">
-        <h1>Eventos Disponíveis</h1>
-
-        <div style={{ marginBottom: 12 }}>
-          <button onClick={carregarEventos}>Atualizar</button>
+        <div className="top-actions">
+          <button className="btn-refresh" onClick={carregarEventos}>
+            Atualizar Lista
+          </button>
         </div>
 
         {eventos.length === 0 && !loading ? (
-          <p>Nenhum evento encontrado.</p>
+          <p className="nenhum-evento">Nenhum evento encontrado.</p>
         ) : (
           <ul className="eventos-lista">
             {eventos.map((ev) => (
-              <li key={ev.id ?? Math.random()} className="evento-item">
-                <h3>{ev.titulo}</h3>
-                <p>{ev.descricao}</p>
-                <div style={{ fontSize: 13, color: "#444" }}>
-                  <strong>Período:</strong> {formatDateRange(ev.dataInicio, ev.dataFim)}
+              <li key={ev.id} className="evento-item">
+                <div className="evento-star">⭐</div>
+                <div className="evento-info">
+                  <h3>{ev.titulo}</h3>
+                  <p className="descricao">{ev.descricao}</p>
+                  <p className="periodo">
+                    <strong>Período:</strong> {formatDateRange(ev.dataInicio, ev.dataFim)}
+                  </p>
                 </div>
-                {ev.visibilidade && (
-                  <div style={{ fontSize: 12, color: ev.visibilidade === "ativo" ? "green" : "gray" }}>
-                    Visibilidade: {ev.visibilidade} {ev.statusInterno ? `· ${ev.statusInterno}` : ""}
-                  </div>
-                )}
               </li>
             ))}
           </ul>
