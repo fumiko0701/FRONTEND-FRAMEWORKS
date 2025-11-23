@@ -58,7 +58,7 @@ export default function Register() {
       // salva token jwt
       localStorage.setItem("token", data.token);
 
-      navigate("/home");
+      navigate("/login");
     } catch (error) {
       console.error("Erro no registro:", error);
       setErro("Erro inesperado. Tente novamente.");

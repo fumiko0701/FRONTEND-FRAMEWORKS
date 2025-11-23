@@ -33,7 +33,7 @@ function Layout({ children }) {
   const location = useLocation();
 
   // Oculta a Navbar na SplashScreen
-  const hideNavbar = location.pathname === "/" || location.pathname === "/register";
+  const hideNavbar = location.pathname === "/" || location.pathname === "/register" || location.pathname === "/login";
 
   return (
     <>
