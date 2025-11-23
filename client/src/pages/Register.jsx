@@ -5,11 +5,13 @@ import "../styles/register.css";
 export default function Register() {
   const navigate = useNavigate();
 
-  // estados do formulário
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [confirmSenha, setConfirmSenha] = useState("");
+  const [dataNascimento, setDataNascimento] = useState("");
+  const [tipo, setTipo] = useState("participante");
+
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState("");
 
@@ -22,19 +24,29 @@ export default function Register() {
       return;
     }
 
+    console.log("Enviando para API:", {
+      nome,
+      email,
+      senha,
+      data_nascimento: dataNascimento,
+      tipo,
+    });
+
     try {
       setLoading(true);
 
-      const response = await fetch("http://localhost:5000/api/register", {
+      const response = await fetch("http://localhost:3001/usuarios", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           nome,
           email,
           senha,
+          data_nascimento: dataNascimento,
+          tipo,
         }),
       });
-
+      console.log("Response status:", response.status);
       const data = await response.json();
 
       if (!response.ok) {
@@ -43,12 +55,10 @@ export default function Register() {
         return;
       }
 
-      // salvar token jwt
+      // salva token jwt
       localStorage.setItem("token", data.token);
 
-      // redirecionar
       navigate("/home");
-
     } catch (error) {
       console.error("Erro no registro:", error);
       setErro("Erro inesperado. Tente novamente.");
@@ -59,18 +69,20 @@ export default function Register() {
 
   return (
     <div className="register-container">
-      {/* lado esquerdo igual splash */}
-            <div className="left-section">
+
+      {/* lateral esquerda igual a splash */}
+      <div className="left-section">
         <div className="logo-wrapper">
-          <img 
-            src="/logoapp.png" 
-            alt="logo" 
-            className="logo-img" 
+          <img
+            src="/logoapp.png"
+            alt="logo"
+            className="logo-img"
           />
           <h1 className="logo-title">Party Ferret</h1>
         </div>
       </div>
-      {/* lado direito - formulário */}
+
+      {/* lado direito */}
       <div className="register-right">
         <form className="register-form" onSubmit={handleRegister}>
           <h2>Registrar</h2>
@@ -92,6 +104,22 @@ export default function Register() {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
+
+          <input
+            type="date"
+            value={dataNascimento}
+            onChange={(e) => setDataNascimento(e.target.value)}
+            required
+          />
+
+          <select
+            value={tipo}
+            onChange={(e) => setTipo(e.target.value)}
+            required
+          >
+            <option value="participante">Participante</option>
+            <option value="organização">Organização</option>
+          </select>
 
           <input
             type="password"
