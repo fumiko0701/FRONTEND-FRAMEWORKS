@@ -1,0 +1,93 @@
+.register-container {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+}
+
+/* Lado esquerdo */
+.left-section {
+  flex: 1;
+  background: linear-gradient(135deg, #ffac50, #b95f3e);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+.logo-wrapper {
+  text-align: center;
+}
+
+.logo-img {
+  width: 300px;
+  height: 300px;
+  margin-bottom: -40px;
+}
+
+.logo-title {
+  font-size: 50px;
+  font-weight: bold;
+}
+
+/* Lado direito */
+.register-right {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+}
+
+.register-form {
+  width: 100%;
+  max-width: 370px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.register-form h2 {
+  margin-bottom: 10px;
+}
+
+.register-form input {
+  padding: 12px;
+  border: 1px solid #bbb;
+  border-radius: 6px;
+}
+
+.register-form button {
+  padding: 12px;
+  border: none;
+  background: #4f46e5;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+  transition: 0.3s;
+}
+
+.register-form button:hover {
+  background: #4338ca;
+}
+
+.register-error {
+  background: #ffdddd;
+  color: #d10000;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+/* Link para login */
+.register-login {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.register-login span {
+  color: #4f46e5;
+  cursor: pointer;
+  font-weight: bold;
+}

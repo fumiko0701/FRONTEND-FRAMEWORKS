@@ -1,16 +1,15 @@
 import React, { Suspense, lazy } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
+import "./styles/global.css";
 
-import "./styles/global.css"; // estilos globais
-
-// Lazy-load das páginas para garantir que Eventos (e seu fetch) só sejam carregados
-// quando o usuário for para /eventos. Isso evita qualquer carga/desencadeamento
-// de requests para eventos na inicialização do app.
+// Lazy loading das páginas
+const SplashScreen = lazy(() => import("./pages/SplashScreen"));
 const Home = lazy(() => import("./pages/Home"));
 const Eventos = lazy(() => import("./pages/Eventos"));
 const Login = lazy(() => import("./pages/Login"));
+const Register = lazy(() => import("./pages/Register")); // caso tenha
 
 function LoadingFallback() {
   return (
@@ -29,22 +28,42 @@ function NotFound() {
   );
 }
 
+// Controla se a Navbar será exibida ou não
+function Layout({ children }) {
+  const location = useLocation();
+
+  // Oculta a Navbar na SplashScreen
+  const hideNavbar = location.pathname === "/" || location.pathname === "/register";
+
+  return (
+    <>
+      {!hideNavbar && <Navbar />}
+      {children}
+    </>
+  );
+}
+
 export default function App() {
   return (
     <BrowserRouter>
-      <Navbar />
+      <Layout>
+        <Suspense fallback={<LoadingFallback />}>
+          <Routes>
 
-      {/* Suspense garante fallback enquanto as páginas lazy são carregadas.
-          Como Eventos é lazy, o fetch que você colocou em Eventos.jsx só roda
-          quando a rota /eventos é acessada. */}
-      <Suspense fallback={<LoadingFallback />}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/eventos" element={<Eventos />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Suspense>
+            {/* SPLASHSCREEN → PRIMEIRA TELA */}
+            <Route path="/" element={<SplashScreen />} />
+
+            {/* Suas rotas normais */}
+            <Route path="/home" element={<Home />} />
+            <Route path="/eventos" element={<Eventos />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+
+            {/* 404 */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
+      </Layout>
     </BrowserRouter>
   );
 }
