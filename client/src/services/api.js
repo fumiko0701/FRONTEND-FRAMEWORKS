@@ -9,35 +9,33 @@ const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:3001";
 
 const api = axios.create({
   baseURL: BASE_URL,
-  timeout: 8000, // timeout em ms
+  timeout: 8000,
 });
 
-// Sempre envia o TOKEN_TESTE no Authorization
+// envia token do usuário se existir
 api.interceptors.request.use((config) => {
-  config.headers = config.headers || {};
-  config.headers.Authorization = `Bearer ${TOKEN_TESTE}`;
+  const token = localStorage.getItem("token");
+  if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
 
-// Retry interceptor simples com backoff exponencial para erros de rede
+// retry interceptor
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const config = error.config;
-    // se não há config ou já tentamos demais, rejeita
     if (!config) return Promise.reject(error);
 
     config.__retryCount = config.__retryCount || 0;
     const MAX_RETRIES = 3;
 
-    // re-tenta apenas em erros de rede (sem response) ou status 429/5xx
     const shouldRetry =
       !error.response ||
       (error.response && (error.response.status >= 500 || error.response.status === 429));
 
     if (shouldRetry && config.__retryCount < MAX_RETRIES) {
       config.__retryCount += 1;
-      const delay = Math.min(2000 * 2 ** (config.__retryCount - 1), 8000); // 2s,4s,8s
+      const delay = Math.min(2000 * 2 ** (config.__retryCount - 1), 8000);
       await new Promise((res) => setTimeout(res, delay));
       return api(config);
     }
@@ -45,5 +43,10 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+// --- FUNÇÕES DE AUTENTICAÇÃO ---
+export const loginUser = (email, senha) => api.post("/auth/login", { email, senha });
+export const registerUser = (dados) => api.post("/register", dados);
+export const logoutUser = () => api.post("/logout");
 
 export default api;
