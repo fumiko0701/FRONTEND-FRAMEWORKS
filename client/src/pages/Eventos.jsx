@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
+import { Link } from "react-router-dom"; // import do React Router
 import api from "../services/api";
 import "../styles/eventos.css";
 import Loading from "../components/Loading";
@@ -60,47 +61,73 @@ export default function Eventos() {
   }, [carregarEventos]);
 
   return (
-    <>
-      <Loading active={loading} />
-
-      {/* 🔶 HEADER BONITO */}
-      <header className="eventos-header">
-        <h1>Eventos Disponíveis</h1>
-      </header>
-
-      {erro && (
-        <div className="erro-box">
-          <p>{erro}</p>
-          <button onClick={carregarEventos}>Tentar novamente</button>
+    <div className="dashboard">
+      {/* MENU LATERAL */}
+      <aside className="sidebar">
+        <div className="sidebar-logo">
+          <img src="/logoapp.png" alt="Logo do Sistema" />
+          <p>Ferret Party</p>
         </div>
-      )}
-
-      <div className="eventos-container">
-        <div className="top-actions">
-          <button className="btn-refresh" onClick={carregarEventos}>
-            Atualizar Lista
-          </button>
-        </div>
-
-        {eventos.length === 0 && !loading ? (
-          <p className="nenhum-evento">Nenhum evento encontrado.</p>
-        ) : (
-          <ul className="eventos-lista">
-            {eventos.map((ev) => (
-              <li key={ev.id} className="evento-item">
-                <div className="evento-star">⭐</div>
-                <div className="evento-info">
-                  <h3>{ev.titulo}</h3>
-                  <p className="descricao">{ev.descricao}</p>
-                  <p className="periodo">
-                    <strong>Período:</strong> {formatDateRange(ev.dataInicio, ev.dataFim)}
-                  </p>
-                </div>
-              </li>
-            ))}
+        <nav className="sidebar-menu">
+          <ul>
+            <li>
+              <Link to="/home" className="sidebar-btn active">Home</Link>
+            </li>
+            <li>
+              <Link to="/inscricoes" className="sidebar-btn">Inscricoes</Link>
+            </li>
+            <li>
+              <Link to="/eventos" className="sidebar-btn">Eventos</Link>
+            </li>
+            <li>
+              <Link to="/perfil" className="sidebar-btn">Perfil</Link>
+            </li>
           </ul>
+        </nav>
+      </aside>
+
+      {/* CONTEÚDO PRINCIPAL */}
+      <main className="main-content">
+        <Loading active={loading} />
+
+        <header className="eventos-header">
+          <h1>Eventos Disponíveis</h1>
+        </header>
+
+        {erro && (
+          <div className="erro-box">
+            <p>{erro}</p>
+            <button onClick={carregarEventos}>Tentar novamente</button>
+          </div>
         )}
-      </div>
-    </>
+
+        <div className="eventos-container">
+          <div className="top-actions">
+            <button className="btn-refresh" onClick={carregarEventos}>
+              Atualizar Lista
+            </button>
+          </div>
+
+          {eventos.length === 0 && !loading ? (
+            <p className="nenhum-evento">Nenhum evento encontrado.</p>
+          ) : (
+            <ul className="eventos-lista">
+              {eventos.map((ev) => (
+                <li key={ev.id} className="evento-item">
+                  <div className="evento-star">⭐</div>
+                  <div className="evento-info">
+                    <h3>{ev.titulo}</h3>
+                    <p className="descricao">{ev.descricao}</p>
+                    <p className="periodo">
+                      <strong>Período:</strong> {formatDateRange(ev.dataInicio, ev.dataFim)}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </main>
+    </div>
   );
 }
