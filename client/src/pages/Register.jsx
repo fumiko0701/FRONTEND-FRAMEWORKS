@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/register.css";
 
 export default function Register() {
   const navigate = useNavigate();
 
+  useEffect(() => {
+      document.title = "Registre-se";
+  }, []);
+  
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");

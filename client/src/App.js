@@ -1,15 +1,17 @@
+// App.js
 import React, { Suspense, lazy } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
+import FaviconManager from "./components/FavIcon";
+
 import "./styles/global.css";
 
-// Lazy loading das páginas
 const SplashScreen = lazy(() => import("./pages/SplashScreen"));
 const Home = lazy(() => import("./pages/Home"));
 const Eventos = lazy(() => import("./pages/Eventos"));
 const Login = lazy(() => import("./pages/Login"));
-const Register = lazy(() => import("./pages/Register")); // caso tenha
+const Register = lazy(() => import("./pages/Register"));
 
 function LoadingFallback() {
   return (
@@ -28,15 +30,30 @@ function NotFound() {
   );
 }
 
-// Controla se a Navbar será exibida ou não
 function Layout({ children }) {
   const location = useLocation();
 
-  // Oculta a Navbar na SplashScreen
-  const hideNavbar = location.pathname === "/" || location.pathname === "/register" || location.pathname === "/login";
+  const hideNavbar =
+    location.pathname === "/" ||
+    location.pathname === "/register" ||
+    location.pathname === "/login";
 
   return (
     <>
+      {/* ---- SISTEMA UNIVERSAL DE FAVICON ---- */}
+      <FaviconManager
+        defaultIcon="/favicon.ico"
+
+        // --- FUTURO: ÍCONES POR ROTA
+        // Basta descomentar e colocar seus ícones:
+        //
+        // routeIcons={{
+        //   "/login": "/icon-login.ico",
+        //   "/register": "/icon-register.ico",
+        //   "/eventos": "/icon-eventos.ico",
+        // }}
+      />
+
       {!hideNavbar && <Navbar />}
       {children}
     </>
@@ -49,17 +66,11 @@ export default function App() {
       <Layout>
         <Suspense fallback={<LoadingFallback />}>
           <Routes>
-
-            {/* SPLASHSCREEN → PRIMEIRA TELA */}
             <Route path="/" element={<SplashScreen />} />
-
-            {/* Suas rotas normais */}
             <Route path="/home" element={<Home />} />
             <Route path="/eventos" element={<Eventos />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-
-            {/* 404 */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>

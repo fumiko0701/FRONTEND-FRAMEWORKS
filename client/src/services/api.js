@@ -5,7 +5,8 @@ import axios from "axios";
 const TOKEN_TESTE = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c3VhcmlvIjoxMiwiZW1haWwiOiJ3YWxsc2NvdmVyZWRpbmJsb29kQGFsdGVyLm55YSIsInRpcG8iOiJvcmdhbml6YWRvciIsImlhdCI6MTc2MzQyOTYwMCwiZXhwIjoxNzYzNDM2ODAwfQ.vDjwU021PdvN_r5ITdeFGDDuS7Ln9GSN7vy4YKzYqto";
 
 // Use variável de ambiente para poder apontar para backend remoto quando necessário
-const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:3001";
+const BASE_URL = process.env.REACT_APP_API_URL;
+
 
 const api = axios.create({
   baseURL: BASE_URL,
@@ -45,8 +46,9 @@ api.interceptors.response.use(
 );
 
 // --- FUNÇÕES DE AUTENTICAÇÃO ---
+export const registerUser = (dados) => api.post("/usuarios", dados);
 export const loginUser = (email, senha) => api.post("/auth/login", { email, senha });
-export const registerUser = (dados) => api.post("/register", dados);
-export const logoutUser = () => api.post("/logout");
+export const logoutUser = () => api.post("/auth/logout"); // se tiver rota logout
+
 
 export default api;

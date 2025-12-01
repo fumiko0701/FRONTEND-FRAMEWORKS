@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/splashScreen.css";
 
 export default function Splash() {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    document.title = "Bem-vindo!";
+  }, []);
 
   const irParaLogin = () => {
     navigate("/login");

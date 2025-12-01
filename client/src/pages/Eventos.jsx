@@ -1,7 +1,8 @@
-import React, { useEffect, useState, useCallback } from "react";
+// Eventos.jsx
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import api from "../services/api";
 import "../styles/eventos.css";
-import Loading from "../components/Loading";   // <<< ADICIONADO
+import Loading from "../components/Loading";
 
 function formatDateRange(startIso, endIso) {
   try {
@@ -28,10 +29,21 @@ function formatDateRange(startIso, endIso) {
 
 export default function Eventos() {
   const [eventos, setEventos] = useState([]);
-  const [loading, setLoading] = useState(true); // <<< já existia
+  const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState("");
 
+  // ref para garantir que a função execute apenas 1 vez
+  const carregouRef = useRef(false);
+
+  useEffect(() => {
+    document.title = "Eventos Disponíveis";
+  }, []);
+
   const carregarEventos = useCallback(async () => {
+    // se já carregou, sai
+    if (carregouRef.current) return;
+    carregouRef.current = true;
+
     setLoading(true);
     setErro("");
     try {
@@ -59,7 +71,7 @@ export default function Eventos() {
         setErro("Não foi possível carregar os eventos.");
       }
     } finally {
-      setLoading(false); // <<< ativa/desativa o loader
+      setLoading(false);
     }
   }, []);
 
@@ -69,7 +81,6 @@ export default function Eventos() {
 
   return (
     <>
-      {/* LOADING UNIVERSAL */}
       <Loading active={loading} />
 
       {erro && (
