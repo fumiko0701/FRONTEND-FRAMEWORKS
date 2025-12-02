@@ -66,7 +66,7 @@ const assentoOcupado = async (id_evento, secao, assento) => {
 const podeGerenciarConvite = async (id_evento, id_usuario) => {
   // 1 - Checar se usuário é organizador global
   const result = await pool.query(
-    `SELECT tipo FROM usuarios WHERE id_usuario = $1`,
+    `SELECT tipo FROM usuario WHERE id_usuario = $1`,
     [id_usuario]
   )
   const tipo = result.rows[0]?.tipo

@@ -46,7 +46,7 @@ router.get('/evento/:id_evento/:id_usuario', authMiddleware, rateLimit(15, 'minu
 router.post(
   '/evento/:id_evento/usuario/:id_usuario',
   authMiddleware,
-  rateLimit(3, 'minutos'),
+  rateLimit(5, 'minutos'),
   criarConviteDiretoEventoUsuario
 )
 

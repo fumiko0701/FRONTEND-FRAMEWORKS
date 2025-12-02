@@ -93,11 +93,7 @@ export const IDQuery = async (id, ent) => {
   }
 }
 
-
-// -----------------------------------------------------------------------------
-// ⭐ NOVA FUNÇÃO — validarExistenciaAtiva(tabela, campoId, valor)
 // Usada para: await validarExistenciaAtiva('local', 'id_local', id_local)
-// -----------------------------------------------------------------------------
 export const validarExistenciaAtiva = async (tabela, campoId, valor) => {
   try {
     const q = await pool.query(
@@ -170,8 +166,6 @@ const foreignKeyIDQuery = async (entries) => {
 
   return 1
 }
-
-
 
 // LISTAR
 export const listarColunas = async (req, res, ent) => {

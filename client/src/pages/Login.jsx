@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginUser } from "../services/api"; // <-- usando api.js
+import { loginUser } from "../services/api";
 import "../styles/register.css";
 
 export default function Login() {
@@ -18,38 +18,40 @@ export default function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     setErro("");
+    setLoading(true);
 
     try {
-      setLoading(true);
-
       const response = await loginUser(email, senha);
       const data = response.data;
 
-      // Login bem-sucedido
+      // Salva token enviado pelo backend
       localStorage.setItem("token", data.token);
-      navigate("/home");
 
-    } catch (error) {
+      // Redireciona
+      navigate("/home");
+    } 
+    catch (error) {
       console.error("Erro no login:", error);
 
       if (error.response) {
-        const { erro } = error.response.data;
+        // === Mensagens EXATAS do backend ===
+        const backendError = error.response.data.erro || error.response.data.message;
 
-        if (erro === "Usuário não encontrado.") {
-          setErro("E-mail incorreto ou não cadastrado.");
-        } else if (erro === "Senha incorreta.") {
-          setErro("Senha incorreta.");
+        if (backendError === "Usuário ou senha incorretos.") {
+          setErro("E-mail ou senha incorretos.");
+        } else if (backendError) {
+          setErro(backendError);
         } else {
-          setErro(erro || "Erro ao fazer login.");
+          setErro("Erro ao fazer login.");
         }
-      }
-      else {
+      } else {
         setErro("Erro inesperado. Tente novamente.");
       }
     } finally {
       setLoading(false);
     }
   };
+
   return (
     <div className="register-container">
       <div className="left-section">
