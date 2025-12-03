@@ -1,8 +1,7 @@
-// src/middleware/authMiddleware.js
 import jwt from 'jsonwebtoken'
 
 export const tokenBlacklist = new Set()
-const FLIP_BYPASS = 1 // 0 para desativar o bypass, 1 para ativar
+const FLIP_BYPASS = 1
 
 export const authMiddleware = (req, res, next) => {
   if (FLIP_BYPASS === 0) return next()
@@ -24,7 +23,7 @@ export const authMiddleware = (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET)
 
     req.userId = decoded.id_usuario
-    req.userTipo = decoded.tipo   //IMPORTANTE PARA PERMISSÕES
+    req.userTipo = decoded.tipo
 
     next()
   } catch (error) {

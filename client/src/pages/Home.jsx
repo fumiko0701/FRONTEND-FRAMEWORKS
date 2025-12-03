@@ -1,9 +1,12 @@
-// /client/src/pages/Home.jsx
+import { useEffect } from "react";
 export default function Home() {
+  useEffect(() => {
+    document.title = "Ferret's Home";
+  } , []);
   return (
-    <div>
-      <h1>Página Inicial</h1>
-      <p>Bem-vindo ao sistema de eventos!</p>
+    <div style={{ padding: 20 }}>
+      <h1>Bem-vindo ao sistema de eventos!</h1>
+      <p>Use o menu acima para navegar.</p>
     </div>
   );
 }

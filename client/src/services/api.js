@@ -1,14 +1,14 @@
 // client/src/services/api.js
 import axios from "axios";
 
-const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
+const BASE_URL = process.env.REACT_APP_API_URL;
 
 const api = axios.create({
   baseURL: BASE_URL,
   timeout: 8000,
 });
 
-// Adiciona token automaticamente
+// Anexa token
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) config.headers.Authorization = `Bearer ${token}`;
@@ -40,14 +40,15 @@ api.interceptors.response.use(
   }
 );
 
-// === AUTENTICAÇÃO ===
+// ===== AUTENTICAÇÃO =====
 export const loginUser = (email, senha) =>
   api.post("/auth/login", { email, senha });
 
-export const registerUser = (dados) =>
-  api.post("/auth/register", dados);
+export const registerUser = (dados) => api.post("/auth/register", dados);
 
-export const logoutUser = () =>
-  api.post("/auth/logout");
+export const logoutUser = () => api.post("/auth/logout");
+
+// pegar usuário logado
+export const getUserLogged = () => api.get("/auth/me");
 
 export default api;

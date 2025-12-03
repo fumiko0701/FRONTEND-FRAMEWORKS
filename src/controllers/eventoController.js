@@ -24,39 +24,69 @@ const ent = new Entidade(
 
 const eventoIDQuery = async (id) => IDQuery(id, ent)
 
-// 1) Listar eventos
+// 1) Listar eventos (com Local + Criador)
 export const listarEventos = async (req, res) => {
   try {
-    const isAdmin = req.userTipo === "organizador"
+    const isAdmin = req.userTipo === "organizador";
 
-    let query = ""
-    let params = []
+    let query = "";
+    let params = [];
 
     if (isAdmin) {
-      // ADMIN → vê absolutamente TUDO
+      // ADMIN → vê tudo
       query = `
-        SELECT *
-        FROM evento
-        ORDER BY data_inicio ASC;
-      `
+        SELECT 
+          e.*,
+          l.nome AS local_nome,
+          l.endereco AS local_endereco,
+          l.capacidade AS local_capacidade,
+
+          -- categoria agora vem só como ID
+          e.id_categoria,
+
+          -- criador
+          u.id_usuario AS id_usuario_criador,
+          u.nome AS criador_nome,
+          u.email AS criador_email
+
+        FROM evento e
+        JOIN local l ON e.id_local = l.id_local
+        JOIN usuario u ON e.id_usuario_criador = u.id_usuario
+        ORDER BY e.data_inicio ASC;
+      `;
     } else {
-      // USUÁRIO COMUM → só eventos público
+      // USUÁRIO NORMAL → só eventos públicos
       query = `
-        SELECT *
-        FROM evento
-        WHERE visibilidade = 'publico'
-        ORDER BY data_inicio ASC;
-      `
+        SELECT 
+          e.*,
+          l.nome AS local_nome,
+          l.endereco AS local_endereco,
+          l.capacidade AS local_capacidade,
+
+          -- categoria agora vem só como ID
+          e.id_categoria,
+
+          -- criador
+          u.id_usuario AS id_usuario_criador,
+          u.nome AS criador_nome,
+          u.email AS criador_email
+
+        FROM evento e
+        JOIN local l ON e.id_local = l.id_local
+        JOIN usuario u ON e.id_usuario_criador = u.id_usuario
+        WHERE e.visibilidade = 'publico'
+        ORDER BY e.data_inicio ASC;
+      `;
     }
 
-    const result = await pool.query(query, params)
-    res.json(result.rows)
+    const result = await pool.query(query, params);
+    return res.json(result.rows);
 
   } catch (err) {
-    console.error("Erro ao listar eventos:", err)
-    res.status(500).json({ erro: err.message })
+    console.error("Erro ao listar eventos:", err);
+    res.status(500).json({ erro: err.message });
   }
-}
+};
 
 // 2) Buscar evento por id
 export const buscarEventoPorId = async (req, res) => {
