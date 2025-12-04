@@ -1,0 +1,71 @@
+.profile-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #FFFBDA; /* Fundo principal */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 3px solid #FF9940; /* Destaque laranja */
+  margin-bottom: 10px;
+}
+
+.name {
+  color: #733025; /* Texto escuro */
+  font-size: 24px;
+  margin: 0;
+}
+
+.email {
+  color: #836661; /* Tom terroso */
+  font-size: 16px;
+}
+
+.profile-details {
+  background-color: #FFFFFF; /* Fundo branco para seção */
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #FFCE97; /* Borda creme */
+}
+
+.profile-details h2 {
+  color: #F3722C; /* Destaque laranja */
+  margin-top: 0;
+}
+
+.bio {
+  color: #785454; /* Texto médio */
+  line-height: 1.5;
+}
+
+.edit-button {
+  background-color: #FF9940; /* Botão laranja */
+  color: #FFFFFF; /* Texto branco */
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.edit-button:hover {
+  background-color: #F3722C; /* Hover mais escuro */
+}
+
+.loading, .error {
+  text-align: center;
+  color: #733025;
+  font-size: 18px;
+  padding: 20px;
+}
