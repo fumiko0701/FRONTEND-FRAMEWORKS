@@ -1,9 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/splashScreen.css";
 
+const backendURL = process.env.REACT_APP_API_URL?.replace(/\/$/, "") || "";
+
 export default function Splash() {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    document.title = "Bem-vindo!";
+  }, []);
 
   const irParaLogin = () => {
     navigate("/login");
@@ -20,7 +26,7 @@ export default function Splash() {
       <div className="left-section">
         <div className="logo-wrapper">
           <img 
-            src="/logoapp.png" 
+            src={backendURL + "/assets/icon_party.png"} 
             alt="logo" 
             className="logo-img" 
           />

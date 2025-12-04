@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/register.css";
 
 export default function Register() {
   const navigate = useNavigate();
 
+  useEffect(() => {
+      document.title = "Registre-se";
+  }, []);
+  
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
@@ -58,7 +62,7 @@ export default function Register() {
       // salva token jwt
       localStorage.setItem("token", data.token);
 
-      navigate("/home");
+      navigate("/login");
     } catch (error) {
       console.error("Erro no registro:", error);
       setErro("Erro inesperado. Tente novamente.");

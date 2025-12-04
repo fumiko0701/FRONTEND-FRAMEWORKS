@@ -2,41 +2,42 @@ import React, { Suspense, lazy } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
+import FaviconManager from "./components/FavIcon";
+import PrivateRoute from "./components/PrivateRoute";
+import { AuthProvider } from "./context/AuthContext";
+import { CategoriaProvider } from "./context/CategoriaContext";
+
 import "./styles/global.css";
 
-// Lazy loading das páginas
 const SplashScreen = lazy(() => import("./pages/SplashScreen"));
 const Home = lazy(() => import("./pages/Home"));
 const Eventos = lazy(() => import("./pages/Eventos"));
 const Login = lazy(() => import("./pages/Login"));
-const Register = lazy(() => import("./pages/Register")); // caso tenha
+const Register = lazy(() => import("./pages/Register"));
 
 function LoadingFallback() {
-  return (
-    <div style={{ padding: 24 }}>
-      <p>Carregando...</p>
-    </div>
-  );
+  return <div style={{ padding: 24 }}>Carregando...</div>;
 }
 
 function NotFound() {
   return (
     <div style={{ padding: 24 }}>
       <h2>Página não encontrada</h2>
-      <p>Verifique a URL ou volte para a página inicial.</p>
     </div>
   );
 }
 
-// Controla se a Navbar será exibida ou não
 function Layout({ children }) {
   const location = useLocation();
 
-  // Oculta a Navbar na SplashScreen
-  const hideNavbar = location.pathname === "/" || location.pathname === "/register";
+  const hideNavbar =
+    location.pathname === "/" ||
+    location.pathname === "/register" ||
+    location.pathname === "/login";
 
   return (
     <>
+      <FaviconManager defaultIcon="/favicon.ico" />
       {!hideNavbar && <Navbar />}
       {children}
     </>
@@ -45,25 +46,41 @@ function Layout({ children }) {
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Layout>
-        <Suspense fallback={<LoadingFallback />}>
-          <Routes>
+    <AuthProvider>
+      <CategoriaProvider>
+        <BrowserRouter>
+          <Layout>
+            <Suspense fallback={<LoadingFallback />}>
+              <Routes>
+                <Route path="/" element={<SplashScreen />} />
 
-            {/* SPLASHSCREEN → PRIMEIRA TELA */}
-            <Route path="/" element={<SplashScreen />} />
+                <Route
+                  path="/home"
+                  element={
+                    <PrivateRoute>
+                      <Home />
+                    </PrivateRoute>
+                  }
+                />
 
-            {/* Suas rotas normais */}
-            <Route path="/home" element={<Home />} />
-            <Route path="/eventos" element={<Eventos />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+                <Route
+                  path="/eventos"
+                  element={
+                    <PrivateRoute>
+                      <Eventos />
+                    </PrivateRoute>
+                  }
+                />
 
-            {/* 404 */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
-      </Layout>
-    </BrowserRouter>
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Suspense>
+          </Layout>
+        </BrowserRouter>
+      </CategoriaProvider>
+    </AuthProvider>
   );
 }

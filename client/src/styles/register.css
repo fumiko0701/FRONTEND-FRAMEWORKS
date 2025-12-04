@@ -1,11 +1,12 @@
-/* CONTAINER PRINCIPAL DA TELA DE REGISTRO */
+/* CONTAINER PRINCIPAL */
 .register-container {
   width: 100%;
   height: 100vh;
   display: flex;
+  overflow: hidden;
 }
 
-/* ----- LADO ESQUERDO (mesmo da splash) ----- */
+/* LADO ESQUERDO */
 .left-section {
   flex: 1;
   background: linear-gradient(135deg, #ffac50, #b95f3e);
@@ -30,19 +31,31 @@
   font-weight: bold;
 }
 
-/* ----- LADO DIREITO (formulário) ----- */
+/* LADO DIREITO */
 .register-right {
   flex: 1;
   padding: 60px;
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+}
+
+/* CARD DE LOGIN */
+.login-card {
+  width: 100%;
+  max-width: 450px;
+  background: #fff;
+  border-radius: 20px;
+  padding: 40px 80px 40px 30px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: visible;
 }
 
 /* FORMULÁRIO */
 .register-form {
   width: 100%;
-  max-width: 400px;
   display: flex;
   flex-direction: column;
   gap: 18px;
@@ -54,7 +67,7 @@
   margin-bottom: 10px;
 }
 
-/* INPUTS GERAIS */
+/* INPUTS PADRÃO */
 .register-form input,
 .register-form select {
   width: 100%;
@@ -63,24 +76,19 @@
   border: 2px solid #ddd;
   font-size: 1rem;
   transition: 0.2s;
+  box-sizing: border-box;
 }
 
-/* HOVER & FOCUS */
 .register-form input:focus,
 .register-form select:focus {
   border-color: #b95f3e;
   outline: none;
-  box-shadow: 0px 0px 4px rgba(185, 95, 62, 0.4);
+  box-shadow: 0px 0px 6px rgba(185, 95, 62, 0.4);
 }
 
-/* SELECT estilizado */
-.register-form select {
-  background: white;
-  cursor: pointer;
-}
-
-/* BOTÃO */
+/* BOTÃO — MESMA LARGURA DOS INPUTS */
 .register-form button {
+  width: 100%;
   padding: 14px;
   background: #733025;
   color: white;
@@ -116,4 +124,81 @@
 
 .register-login span:hover {
   text-decoration: underline;
+}
+
+/* IMAGEM DO FURÃO */
+.furret-img {
+  position: absolute;
+  width: 140px;
+  height: auto;
+  object-fit: contain;
+  transition: all 0.3s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ================================
+   CAMPO DE SENHA — MESMO TAMANHO
+   ================================ */
+.input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.input-wrapper input {
+  width: 100%;
+  padding: 14px;
+  padding-right: 45px; /* espaço do ícone */
+  border-radius: 10px;
+  border: 2px solid #ddd;
+  font-size: 1rem;
+  transition: 0.2s;
+  box-sizing: border-box;
+}
+
+.input-wrapper input:focus {
+  border-color: #b95f3e;
+  outline: none;
+  box-shadow: 0px 0px 6px rgba(185, 95, 62, 0.4);
+}
+
+/* Ícone do olhinho — dentro do campo, sem alterar largura */
+.toggle-senha {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
+  color: #666;
+  z-index: 5;
+}
+
+/* RESPONSIVIDADE */
+@media (max-width: 900px) {
+  .register-container {
+    flex-direction: column;
+  }
+
+  .left-section,
+  .register-right {
+    flex: none;
+    width: 100%;
+    height: 50vh;
+  }
+
+  .login-card {
+    max-width: 90%;
+    padding: 30px 50px 30px 20px;
+  }
+
+  .furret-img {
+    width: 100px;
+  }
+}
+
+@media (max-width: 500px) {
+  .furret-img {
+    display: none;
+  }
 }
