@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 
 export const tokenBlacklist = new Set()
-const FLIP_BYPASS = 1
+const FLIP_BYPASS = 1 // 0 desativa a verificação de token para testes
 
 export const authMiddleware = (req, res, next) => {
   if (FLIP_BYPASS === 0) return next()

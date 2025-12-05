@@ -61,7 +61,6 @@ export const listarMinhasInscricoes = async (req, res) => {
     res.status(200).json(result.rows)
 
   } catch (err) {
-    console.error("Erro ao listar minhas inscrições:", err)
     res.status(500).json({ erro: err.message })
   }
 }
@@ -78,6 +77,7 @@ export const buscarInscricaoPorId = async (req, res) => {
 export const criarInscricao = async (req, res) => {
   const usuario = req.userId
   let { id_evento } = req.body
+  // logs removidos
 
   if (req.userTipo !== "organizador") {
     req.body.id_usuario = usuario
@@ -193,7 +193,6 @@ export const listarInscricoesEvento = async (req, res) => {
 
     res.status(200).json(inscricoes.rows)
   } catch (err) {
-    console.error("Erro ao listar inscrições do evento:", err)
     res.status(500).json({ erro: err.message })
   }
 }
@@ -224,7 +223,6 @@ export const aceitarInscricao = async (req, res) => {
 
     res.status(200).json({ sucesso: "Inscrição aprovada com sucesso!" })
   } catch (err) {
-    console.error("Erro ao aprovar inscrição:", err)
     res.status(500).json({ erro: err.message })
   }
 }
@@ -242,7 +240,6 @@ export const recusarInscricao = async (req, res) => {
 
     res.status(200).json({ sucesso: "Inscrição recusada com sucesso!" })
   } catch (err) {
-    console.error("Erro ao recusar inscrição:", err)
     res.status(500).json({ erro: err.message })
   }
 }

@@ -22,55 +22,78 @@ const ent = new Entidade(
   ['descricao']
 )
 
+/* ======================================================================
+   NORMALIZADOR UNIFICADO
+   Entrada aceita:
+   - "2025-12-01T09:00"
+   - "2025-12-01 09:00"
+   - "2025-12-01"
+   Saída:
+   → "2025-12-01T09:00:00"
+====================================================================== */
+function normalizeDateTime(input) {
+  if (!input) return null;
+
+  let txt = String(input).trim();
+
+  // já vem com segundos
+  if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/.test(txt)) {
+    return txt;
+  }
+
+  // yyyy-mm-ddThh:mm
+  let match = txt.match(/^(\d{4}-\d{2}-\d{2})[ T](\d{2}:\d{2})$/);
+  if (match) {
+    return `${match[1]}T${match[2]}:00`;
+  }
+
+  // yyyy-mm-dd
+  match = txt.match(/^(\d{4}-\d{2}-\d{2})$/);
+  if (match) {
+    return `${match[1]}T00:00:00`;
+  }
+
+  return null;
+}
+
 const eventoIDQuery = async (id) => IDQuery(id, ent)
 
-// 1) Listar eventos (com Local + Criador)
+/* ======================================================================
+   1) LISTAR EVENTOS
+====================================================================== */
 export const listarEventos = async (req, res) => {
   try {
     const isAdmin = req.userTipo === "organizador";
 
     let query = "";
-    let params = [];
 
     if (isAdmin) {
-      // ADMIN → vê tudo
       query = `
         SELECT 
           e.*,
           l.nome AS local_nome,
           l.endereco AS local_endereco,
           l.capacidade AS local_capacidade,
-
-          -- categoria agora vem só como ID
           e.id_categoria,
-
-          -- criador
           u.id_usuario AS id_usuario_criador,
           u.nome AS criador_nome,
           u.email AS criador_email
-
         FROM evento e
         JOIN local l ON e.id_local = l.id_local
         JOIN usuario u ON e.id_usuario_criador = u.id_usuario
         ORDER BY e.data_inicio ASC;
       `;
     } else {
-      // USUÁRIO NORMAL → só eventos públicos
       query = `
         SELECT 
           e.*,
           l.nome AS local_nome,
           l.endereco AS local_endereco,
           l.capacidade AS local_capacidade,
-
-          -- categoria agora vem só como ID
           e.id_categoria,
-
-          -- criador
           u.id_usuario AS id_usuario_criador,
           u.nome AS criador_nome,
           u.email AS criador_email
-
         FROM evento e
         JOIN local l ON e.id_local = l.id_local
         JOIN usuario u ON e.id_usuario_criador = u.id_usuario
@@ -79,29 +102,29 @@ export const listarEventos = async (req, res) => {
       `;
     }
 
-    const result = await pool.query(query, params);
+    const result = await pool.query(query);
     return res.json(result.rows);
 
   } catch (err) {
-    console.error("Erro ao listar eventos:", err);
     res.status(500).json({ erro: err.message });
   }
 };
 
-// 2) Buscar evento por id
+/* ======================================================================
+   2) BUSCAR POR ID
+====================================================================== */
 export const buscarEventoPorId = async (req, res) => {
   buscarColunaPorId(req, res, ent)
 }
 
-// 3) Criar evento (validações completas, horário incluso)
+/* ======================================================================
+   3) CRIAR EVENTO           (AGORA COM HORÁRIO REAL)
+====================================================================== */
 export const criarEvento = async (req, res) => {
   try {
     const userId = req.userId
     if (!userId) {
-      return res.status(401).json({
-        erro: "Usuário não autenticado.",
-        detalhes: "Inclua um token JWT válido no header Authorization."
-      })
+      return res.status(401).json({ erro: "Usuário não autenticado." })
     }
 
     const {
@@ -114,85 +137,51 @@ export const criarEvento = async (req, res) => {
       visibilidade
     } = req.body
 
-    if (!req.body || Object.keys(req.body).length === 0) {
-      return res.status(400).json({
-        erro: "Nenhum dado fornecido na requisição.",
-        mensagem: "Para criar um evento, envie os campos obrigatórios.",
-        obrigatorios: {
-          titulo: "string (não pode ser vazio)",
-          data_inicio: "YYYY-MM-DDTHH:mm",
-          data_fim: "YYYY-MM-DDTHH:mm",
-          id_local: "number",
-          id_categoria: "number",
-          visibilidade: "publico | privado"
-        },
-        opcionais: { descricao: "string" }
-      })
-    }
-
-    if (!titulo || typeof titulo !== "string" || titulo.trim() === "") {
-      return res.status(400).json({
-        erro: "Título é obrigatório e não pode ser vazio."
-      })
+    if (!titulo || !titulo.trim()) {
+      return res.status(400).json({ erro: "Título é obrigatório." })
     }
 
     if (!data_inicio || !data_fim) {
-      return res.status(400).json({
-        erro: "Datas de início e fim são obrigatórias."
-      })
+      return res.status(400).json({ erro: "Datas de início e fim são obrigatórias." })
     }
 
-    const dtInicio = new Date(data_inicio)
-    const dtFim = new Date(data_fim)
-    if (isNaN(dtInicio) || isNaN(dtFim)) {
-      return res.status(400).json({
-        erro: "Datas inválidas."
-      })
+    const inicioTS = normalizeDateTime(data_inicio);
+    const fimTS = normalizeDateTime(data_fim);
+
+    if (!inicioTS || !fimTS) {
+      return res.status(400).json({ erro: "Datas inválidas. Envie YYYY-MM-DD HH:mm" });
     }
 
-    const agora = new Date()
-    if (
-      dtInicio.toDateString() === agora.toDateString() &&
-      dtInicio.getTime() < agora.getTime() + 5 * 60 * 1000
-    ) {
-      return res.status(400).json({
-        erro: "Se o evento for hoje, o horário deve ser pelo menos 5 minutos à frente do horário atual."
-      })
-    }
+    const dtInicio = new Date(inicioTS);
+    const dtFim = new Date(fimTS);
 
     if (dtFim < dtInicio) {
-      return res.status(400).json({
-        erro: "data_fim não pode ser antes de data_inicio."
-      })
+      return res.status(400).json({ erro: "data_fim não pode ser antes de data_inicio." })
     }
 
-    if (!visibilidade || !["publico", "privado"].includes(visibilidade.toLowerCase())) {
-      return res.status(400).json({
-        erro: "Valor inválido ou ausente para 'visibilidade'."
-      })
+    if (!["publico", "privado"].includes(visibilidade?.toLowerCase())) {
+      return res.status(400).json({ erro: "visibilidade inválida." })
     }
 
     if (!id_local || !id_categoria) {
-      return res.status(400).json({
-        erro: "id_local e id_categoria são obrigatórios."
-      })
+      return res.status(400).json({ erro: "id_local e id_categoria são obrigatórios." })
     }
 
     await validarExistenciaAtiva('local', 'id_local', id_local)
     await validarExistenciaAtiva('categoria', 'id_categoria', id_categoria)
 
-    // Inserir evento
     const queryEvento = `
       INSERT INTO evento
       (titulo, descricao, data_inicio, data_fim, id_local, id_categoria, id_usuario_criador, visibilidade)
       VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
       RETURNING *;
     `
+
     const values = [
       titulo.trim(),
       descricao || null,
-      dtInicio,
-      dtFim,
+      inicioTS,
+      fimTS,
       id_local,
       id_categoria,
       userId,
@@ -202,42 +191,35 @@ export const criarEvento = async (req, res) => {
     const result = await pool.query(queryEvento, values)
     const eventoCriado = result.rows[0]
 
-    // Inserir automaticamente o criador na tabela unificada evento_usuario
-    const insertUsuarioEvento = `
-      INSERT INTO evento_usuario
+    await pool.query(
+      `INSERT INTO evento_usuario
       (id_evento, id_usuario, papel, is_criador, convite_status, data_atribuicao)
-      VALUES ($1, $2, 'organizador', TRUE, 'NAO', NOW())
-    `
-    await pool.query(insertUsuarioEvento, [eventoCriado.id_evento, userId])
+      VALUES ($1, $2, 'organizador', TRUE, 'NAO', NOW())`,
+      [eventoCriado.id_evento, userId]
+    );
 
-    res.status(201).json({
+    return res.status(201).json({
       mensagem: "Evento criado com sucesso.",
-      evento: eventoCriado,
-      organizador: { id_usuario: userId, papel: "organizador", criador: true }
+      evento: eventoCriado
     })
 
   } catch (err) {
-    console.error("Erro ao criar evento:", err)
     res.status(500).json({ erro: err.message })
   }
-}
+};
 
-// 4) Atualizar evento (validações de horário incluídas)
+/* ======================================================================
+   4) ATUALIZAR EVENTO
+====================================================================== */
 export const atualizarEvento = async (req, res) => {
   try {
     const id = req.params.id
     const userId = req.userId
 
-    if (!userId) {
-      return res.status(401).json({
-        erro: "Usuário não autenticado."
-      })
-    }
+    if (!userId) return res.status(401).json({ erro: "Usuário não autenticado." })
 
     const evento = await eventoIDQuery(id)
-    if (!evento) {
-      return res.status(404).json({ erro: "Evento não encontrado.", id_recebido: id })
-    }
+    if (!evento) return res.status(404).json({ erro: "Evento não encontrado." })
 
     const {
       titulo,
@@ -249,45 +231,37 @@ export const atualizarEvento = async (req, res) => {
       visibilidade
     } = req.body
 
-    // Valida datas caso sejam fornecidas
-    let dtInicio = data_inicio ? new Date(data_inicio) : new Date(evento.data_inicio)
-    let dtFim = data_fim ? new Date(data_fim) : new Date(evento.data_fim)
+    const inicioTS = data_inicio ? normalizeDateTime(data_inicio) : evento.data_inicio;
+    const fimTS = data_fim ? normalizeDateTime(data_fim) : evento.data_fim;
 
-    if ((data_inicio || data_fim) && (isNaN(dtInicio) || isNaN(dtFim))) {
-      return res.status(400).json({ erro: "Datas inválidas." })
-    }
-
-    const agora = new Date()
-    if (
-      dtInicio.toDateString() === agora.toDateString() &&
-      dtInicio.getTime() < agora.getTime() + 5 * 60 * 1000
-    ) {
-      return res.status(400).json({
-        erro: "Se o evento for hoje, o horário deve ser pelo menos 5 minutos à frente do horário atual."
-      })
-    }
+    const dtInicio = new Date(inicioTS);
+    const dtFim = new Date(fimTS);
 
     if (dtFim < dtInicio) {
-      return res.status(400).json({
-        erro: "data_fim não pode ser antes de data_inicio."
-      })
+      return res.status(400).json({ erro: "data_fim não pode ser antes de data_inicio." })
     }
 
-    if (visibilidade !== undefined && !["publico", "privado"].includes(visibilidade.toLowerCase())) {
-      return res.status(400).json({
-        erro: "Valor inválido para 'visibilidade'.",
-      })
+    if (visibilidade && !["publico", "privado"].includes(visibilidade.toLowerCase())) {
+      return res.status(400).json({ erro: "visibilidade inválida." })
     }
 
     if (id_local !== undefined) await validarExistenciaAtiva('local', 'id_local', id_local)
     if (id_categoria !== undefined) await validarExistenciaAtiva('categoria', 'id_categoria', id_categoria)
 
-    // Monta UPDATE dinamicamente
+    const mapping = {
+      titulo,
+      descricao,
+      data_inicio: inicioTS,
+      data_fim: fimTS,
+      id_local,
+      id_categoria,
+      visibilidade
+    }
+
     const campos = []
     const valores = []
     let idx = 1
 
-    const mapping = { titulo, descricao, data_inicio: dtInicio, data_fim: dtFim, id_local, id_categoria, visibilidade }
     for (const key in mapping) {
       if (mapping[key] !== undefined) {
         campos.push(`${key} = $${idx}`)
@@ -301,56 +275,169 @@ export const atualizarEvento = async (req, res) => {
     }
 
     valores.push(id)
+
     const query = `
-      UPDATE evento
-      SET ${campos.join(', ')}
+      UPDATE evento SET ${campos.join(', ')}
       WHERE id_evento = $${idx}
       RETURNING *
-    `
+    `;
+
     const result = await pool.query(query, valores)
 
-    res.json({ mensagem: "Evento atualizado com sucesso!", evento: result.rows[0] })
+    return res.json({
+      mensagem: "Evento atualizado com sucesso!",
+      evento: result.rows[0]
+    })
 
   } catch (err) {
-    console.error("Erro ao atualizar evento:", err)
     res.status(500).json({ erro: "Erro interno ao atualizar evento.", detalhes: err.message })
   }
 }
 
-// 5) Excluir evento
+/* ======================================================================
+   5) EXCLUIR EVENTO
+====================================================================== */
 export const excluirEvento = async (req, res) => {
   deletarColuna(req, res, ent)
 }
 
-// 6) Ver papel do usuário no evento
+/* ======================================================================
+   6) MEU PAPEL NO EVENTO
+====================================================================== */
 export const verMeuPapelNoEvento = async (req, res) => {
   try {
-    const userId = req.userId
-    const { id_evento } = req.params
+    const userId = req.userId;
+    const { id_evento } = req.params;
 
     if (!userId) {
-      return res.status(401).json({ erro: "Usuário não autenticado." })
+      return res.status(401).json({ erro: "Usuário não autenticado." });
     }
 
-    const query = `
-      SELECT papel, is_criador, convite_status, data_atribuicao
-      FROM evento_usuario
-      WHERE id_evento = $1 AND id_usuario = $2
-    `
-
-    const result = await pool.query(query, [id_evento, userId])
+    const result = await pool.query(
+      `SELECT papel, is_criador, convite_status, data_atribuicao
+       FROM evento_usuario
+       WHERE id_evento = $1 AND id_usuario = $2`,
+      [id_evento, userId]
+    );
 
     if (result.rowCount === 0) {
-      return res.status(404).json({ mensagem: "Você não possui papel neste evento." })
+      return res.status(404).json({ mensagem: "Você não possui papel neste evento." });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       id_evento,
       id_usuario: userId,
       ...result.rows[0]
-    })
+    });
 
   } catch (err) {
-    res.status(500).json({ erro: err.message })
+    res.status(500).json({ erro: err.message });
   }
-}
+};
+
+/* ======================================================================
+   7) EVENTOS ATIVOS DO USUÁRIO (AGORA USANDO TIMESTAMP)
+====================================================================== */
+export const buscarEventosAtivosDoUsuario = async (req, res) => {
+  
+  try {
+    const userId = req.userId;
+
+    if (!userId) {
+      return res.status(401).json({ erro: "Usuário não autenticado." });
+    }
+
+    const dataFiltroRaw = req.body?.data || req.query?.data;
+
+    if (!dataFiltroRaw) {
+      return res.status(400).json({ erro: "Envie { data: 'YYYY-MM-DD HH:mm' }" });
+    }
+
+    const dataFiltroTS = normalizeDateTime(dataFiltroRaw);
+
+    if (!dataFiltroTS) {
+      return res.status(400).json({ erro: "Formato de data inválido." });
+    }
+
+    const result = await pool.query(
+      `
+      SELECT 
+        e.*,
+        eu.papel,
+        eu.is_criador,
+        eu.convite_status,
+        l.nome AS local_nome,
+        l.endereco AS local_endereco,
+        l.capacidade AS local_capacidade,
+        c.nome AS categoria_nome
+      FROM evento_usuario eu
+      JOIN evento e ON eu.id_evento = e.id_evento
+      JOIN local l ON l.id_local = e.id_local
+      JOIN categoria c ON c.id_categoria = e.id_categoria
+      WHERE eu.id_usuario = $1
+        AND eu.visibilidade = 'ativo'
+        AND e.visibilidade IN ('publico', 'privado')
+        AND e.status_interno = 'normal'
+        AND e.data_inicio <= $2::timestamp
+        AND e.data_fim >= $2::timestamp
+      ORDER BY e.data_inicio ASC;
+      `,
+      [userId, dataFiltroTS]
+    );
+
+    return res.json({
+      total: result.rowCount,
+      eventos_ativos: result.rows
+    });
+
+  } catch (err) {
+    console.error("Erro ao buscar eventos ativos:", err);
+    res.status(500).json({ erro: err.message });
+  }
+};
+
+/* ======================================================================
+   8) TODOS EVENTOS DO USUÁRIO
+====================================================================== */
+export const buscarTodosEventosDoUsuario = async (req, res) => {
+  try {
+    const userId = req.userId;
+
+    if (!userId) {
+      return res.status(401).json({ erro: "Usuário não autenticado." });
+    }
+
+    const result = await pool.query(
+      `
+      SELECT 
+        e.*,
+        eu.papel,
+        eu.is_criador,
+        eu.convite_status,
+        l.nome AS local_nome,
+        l.endereco AS local_endereco,
+        l.capacidade AS local_capacidade,
+        c.nome AS categoria_nome
+      FROM evento_usuario eu
+      JOIN evento e ON eu.id_evento = e.id_evento
+      JOIN local l ON l.id_local = e.id_local
+      JOIN categoria c ON c.id_categoria = e.id_categoria
+      WHERE eu.id_usuario = $1
+        AND eu.visibilidade = 'ativo'
+        AND e.visibilidade IN ('publico', 'privado')
+        AND e.status_interno = 'normal'
+      ORDER BY e.data_inicio DESC;
+      `,
+      [userId]
+    );
+
+    return res.json({
+      total: result.rowCount,
+      eventos: result.rows
+    });
+
+  } catch (err) {
+    console.error("Erro ao buscar eventos do usuário:", err);
+    res.status(500).json({ erro: err.message });
+  }
+};

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/register.css";
 
+const backendURL = process.env.REACT_APP_API_URL?.replace(/\/$/, "") || "";
+
 export default function Register() {
   const navigate = useNavigate();
 
@@ -78,7 +80,7 @@ export default function Register() {
       <div className="left-section">
         <div className="logo-wrapper">
           <img
-            src="/logoapp.png"
+            src={backendURL + "/assets/icon_party.png"}
             alt="logo"
             className="logo-img"
           />

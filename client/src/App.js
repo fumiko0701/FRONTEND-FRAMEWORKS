@@ -16,6 +16,7 @@ const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
 const Perfil = lazy(() => import("./pages/Perfil"));
 
+const Inscricoes = lazy(() => import("./pages/Inscricoes"));
 
 function LoadingFallback() {
   return <div style={{ padding: 24 }}>Carregando...</div>;
@@ -70,6 +71,15 @@ export default function App() {
                   element={
                     <PrivateRoute>
                       <Eventos />
+                    </PrivateRoute>
+                  }
+                />
+
+                <Route
+                  path="/inscricoes"
+                  element={
+                    <PrivateRoute>
+                      <Inscricoes />
                     </PrivateRoute>
                   }
                 />
