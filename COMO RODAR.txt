@@ -1,0 +1,16 @@
+Olá caro professor, creio que caso esteja lendo isso é porque o senhor acha interessante e necessário
+conseguir rodar a aplicação usando 'npm run dev' no seu terminal...
+
+
+Porém como sabe, para isso é necessário uma .env valida, e nossa .env.example é na verdade verdadeiramente complexa
+e cheia de chaves de API que te dariam trabalho para configurar
+
+Caso ache necessário, por favor fale comigo no meu Whatsapp ou Email para que eu te entregue as credenciais válidas
+de um arquivo .env de forma privada, pois este repositório é publico e não posso deixar o .env aqui
+
+Nome do aluno líder da equipe:
+
+Marcos Emanuel Celestino Tavares (01718690) github.com/fumiko0701
+
+Whatsapp: +55 (82) 99692-1589
+Email: musicastop90@gmail.com ou marcostavem@gmail.com

@@ -1,77 +1,121 @@
-# FRONTEND-FRAMEWORKS
+# Relatório Final Simplificado SGEV (Ferret's Party)
 
-Projeto full-stack com React no frontend e Node.js + Express no backend.
+## 1. Visão Geral
 
-## Sobre o Projeto
+Sistema de gestão de eventos desenvolvido para a disciplina de
+Backend-Frameworks (4º período - Uninassau Farol).\
+Backend em Node.js + Express + Supabase (PostgreSQL) e frontend em
+React.\
+Inclui autenticação JWT, CRUD completo, arquitetura MVC e interface
+visual criada por **@Rickinho3**.\
+Estilos e componentes adicionais por Marcos CT, Izidio e Paulista.
 
-Aplicação simples que demonstra a integração entre um frontend React e
-um backend Express, com comunicação direta entre ambos.
+## 2. Equipe
 
-## Como Usar
+-   **Marcos Emanuel** --- Líder técnico, modelagem e integração\
+-   **Pedro Izidio** --- Rotas da API\
+-   **Alfred (Indiano)** --- Banco de dados e documentação\
+-   **Vinicius (Paulista)** --- Middlewares e autenticação\
+-   **Richard (Rickinho3)** --- Controladores e design/UI
 
-### Pré-requisitos
+## 3. Repositório
 
--   Node.js 14+
--   npm
+Frontend + Backend: https://github.com/fumiko0701/FRONTEND-FRAMEWORKS
+
+## 4. Tecnologias
+
+-   Node.js, Express\
+-   Supabase (PostgreSQL)\
+-   JWT, bcrypt\
+-   React, Axios, React Router\
+-   Estrutura MVC
+
+## 5. Banco de Dados
+
+PostgreSQL com relacionamentos e FKs.\
+Arquivo SQL incluso.\
+Variáveis do `.env`:\
+SUPABASE_URL, SUPABASE_KEY, SUPABASE_DB_PASSWORD.
+
+## 6. Arquitetura do Projeto
+
+    src/
+      config/
+      models/
+      controllers/
+      routes/
+      middleware/
+      utils/
+      server.js
+
+## 7. Entidades Principais
+
+Usuário, Evento, Palestra, Palestrante, Inscrição, Certificado, Local,
+Categoria, Avaliação, Pagamento.
+
+## 8. Funcionalidades
+
+-   Login e registro com JWT\
+-   Senhas criptografadas\
+-   CRUD completo\
+-   Integração com Supabase\
+-   Interface funcional em React
+
+## 9. Endpoints Básicos
+
+-   POST /usuarios/registro\
+-   POST /usuarios/login\
+-   GET /eventos\
+-   POST /eventos\
+-   PUT /eventos/:id\
+-   DELETE /eventos/:id
+
+------------------------------------------------------------------------
+
+# Informações do Projeto --- FRONTEND-FRAMEWORKS
+
+## 1. Sobre
+
+Aplicação full‑stack simples demonstrando comunicação entre React
+(frontend) e Express (backend).
+
+## 2. Como Usar
 
 ### Instalação
 
-Clone o repositório:
+    git clone <url>
+    cd FRONTEND-FRAMEWORKS
+    npm install
 
-``` bash
-git clone <url-do-repositorio>
-cd FRONTEND-FRAMEWORKS
-```
+    cd client
+    npm install
+    cd ..
 
-Instale as dependências do backend:
+### Execução
 
-``` bash
-npm install
-```
+#### Backend + Frontend (dev)
 
-Instale as dependências do frontend:
-
-``` bash
-cd client
-npm install
-cd ..
-```
-
-### Executando o Projeto
-
-#### Modo Desenvolvimento (Frontend + Backend)
-
-``` bash
-npm run dev
-```
+    npm run dev
 
 Backend: http://localhost:5000\
 Frontend: http://localhost:3000
 
-#### Apenas Backend
+#### Só Backend
 
-``` bash
-npm run server
-```
+    npm run server
 
-#### Apenas Frontend
+#### Só Frontend
 
-``` bash
-npm run client
-```
+    npm run client
 
-#### Modo Produção
+#### Produção
 
-``` bash
-npm run build
-NODE_ENV=production npm start
-```
+    npm run build
+    NODE_ENV=production npm start
 
-O servidor servirá a API e o build do React.
+## 3. Estrutura
 
-## Estrutura do Projeto
-
-    client/                 # Frontend React
+    client/
       public/
       src/
         pages/
@@ -80,39 +124,18 @@ O servidor servirá a API e o build do React.
         styles/
         assets/
       package.json
-    server.js               # Servidor Express
-    package.json            # Configuração do backend
 
-## Endpoints da API
+    server.js
+    package.json
 
-### GET /api/hello
+## 4. Endpoints de Teste
 
-Retorna mensagem do backend:
+**GET /api/hello**\
+Retorna: `{ "message": "Backend conectado com sucesso" }`
 
-``` json
-{
-  "message": "Backend conectado com sucesso"
-}
-```
+**GET /api/status**\
+Retorna status e timestamp.
 
-### GET /api/status
+## 5. Tecnologias
 
-Retorna informações de status:
-
-``` json
-{
-  "status": "Server running",
-  "timestamp": "2024-11-17T23:29:00.000Z"
-}
-```
-
-## Tecnologias Utilizadas
-
--   React
--   Express
--   CORS
--   Concurrently
-
-## Licença
-
-ISC
+React, Express, CORS, Concurrently.

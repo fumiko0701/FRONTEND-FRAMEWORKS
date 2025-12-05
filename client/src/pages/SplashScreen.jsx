@@ -36,12 +36,11 @@ export default function Splash() {
 
       {/* LADO DIREITO */}
       <div className="right-section">
-        <h2 className="brand-title">Sobre a nossa marca</h2>
+        <h2 className="brand-title">Sobre o Ferret’s Party</h2>
 
         <p className="brand-text">
-          Criamos soluções inteligentes para ajudar pequenos e médios negócios
-          a crescerem de forma organizada, profissional e moderna.
-          Nossa missão é levar tecnologia e simplicidade para o seu dia a dia.
+          Um sistema simples e rápido para organizar eventos, palestras e inscrições.
+          Criado para facilitar o trabalho de quem gerencia e de quem participa.
         </p>
 
         <div className="splash-buttons">
