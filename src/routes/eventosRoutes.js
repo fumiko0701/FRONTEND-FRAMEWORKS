@@ -9,7 +9,9 @@ import {
   criarEvento,
   atualizarEvento,
   excluirEvento,
-  verMeuPapelNoEvento
+  verMeuPapelNoEvento,
+  buscarEventosAtivosDoUsuario,
+  buscarTodosEventosDoUsuario,
 } from '../controllers/eventoController.js'
 
 import { authMiddleware } from '../middleware/authMiddleware.js'
@@ -24,6 +26,10 @@ router.get('/:id', authMiddleware, rateLimit(20, 'minutos'), buscarEventoPorId)
 router.post('/', authMiddleware, rateLimit(3, 'minutos'), criarEvento)
 router.put('/:id', authMiddleware, rateLimit(5, 'minutos'), atualizarEvento)
 router.delete('/:id', authMiddleware, rateLimit(2, 'minutos'), excluirEvento)
+
+router.get("/me/ativos", authMiddleware, buscarEventosAtivosDoUsuario);
+router.post("/me/ativos", authMiddleware, buscarEventosAtivosDoUsuario);
+router.get("/me/todos", authMiddleware, buscarTodosEventosDoUsuario);
 
 // 🔥 VER PAPEL DO USUÁRIO LOGADO NO EVENTO
 router.get('/:id_evento/papel/me', authMiddleware, rateLimit(15, 'minutos'), verMeuPapelNoEvento)
