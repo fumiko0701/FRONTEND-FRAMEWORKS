@@ -58,7 +58,6 @@ export const criarUsuario = async (req, res) => {
       usuario: result.rows[0]
     });
   } catch (err) {
-    console.error('Erro ao criar usuário:', err.message);
     res.status(500).json({ error: `Erro ao criar usuário: ${err.message}` });
   }
 }
@@ -108,7 +107,6 @@ export const atualizarUsuario = async (req, res) => {
       usuario: result.rows[0]
     })
   } catch (err) {
-    console.error('Erro ao atualizar usuario:', err.message)
     res.status(500).json({ error: `Erro ao atualizar usuario: ${err.message}` })
   }
 }

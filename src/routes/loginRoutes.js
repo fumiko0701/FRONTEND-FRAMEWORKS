@@ -58,7 +58,6 @@ router.post("/login", async (req, res) => {
       token,
     });
   } catch (err) {
-    console.error("Erro ao realizar login:", err);
     return res.status(500).json({ erro: "Erro ao realizar login." });
   }
 });
@@ -120,7 +119,6 @@ router.post("/register", async (req, res) => {
       usuario: result.rows[0],
     });
   } catch (err) {
-    console.error("Erro ao registrar usuário:", err.message);
     res.status(500).json({ erro: `Erro ao registrar usuário: ${err.message}` });
   }
 });
@@ -141,7 +139,6 @@ router.get("/me", authMiddleware, async (req, res) => {
 
     return res.status(200).json({ usuario: result.rows[0] });
   } catch (error) {
-    console.error("Erro no auth/me:", error);
     res.status(500).json({ erro: "Erro ao validar usuário." });
   }
 });

@@ -14,7 +14,7 @@ export function CategoriaProvider({ children }) {
         const res = await api.get("/categorias");
         setCategorias(res.data);
       } catch (err) {
-        console.error("Erro ao carregar categorias:", err);
+        // erro silencioso ao carregar categorias
       } finally {
         setLoaded(true);
       }

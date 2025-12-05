@@ -83,7 +83,6 @@ export const listarEventos = async (req, res) => {
     return res.json(result.rows);
 
   } catch (err) {
-    console.error("Erro ao listar eventos:", err);
     res.status(500).json({ erro: err.message });
   }
 };
@@ -217,7 +216,6 @@ export const criarEvento = async (req, res) => {
     })
 
   } catch (err) {
-    console.error("Erro ao criar evento:", err)
     res.status(500).json({ erro: err.message })
   }
 }
@@ -312,7 +310,6 @@ export const atualizarEvento = async (req, res) => {
     res.json({ mensagem: "Evento atualizado com sucesso!", evento: result.rows[0] })
 
   } catch (err) {
-    console.error("Erro ao atualizar evento:", err)
     res.status(500).json({ erro: "Erro interno ao atualizar evento.", detalhes: err.message })
   }
 }

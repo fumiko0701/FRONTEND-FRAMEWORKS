@@ -54,7 +54,7 @@ export default function RemoteSelect({
       setList(parsed);
       lastFetch.current = now;
     } catch (err) {
-      console.error("Erro ao carregar remote-select:", err);
+      // erro silencioso ao carregar opções remotas
     } finally {
       setLoadingList(false);
     }

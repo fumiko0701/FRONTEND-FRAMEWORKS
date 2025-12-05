@@ -51,7 +51,6 @@ export default function Inscricoes() {
     } catch (err) {
       const serverMsg = err.response?.data?.erro || err.response?.data?.message;
       setErro(serverMsg || "Não foi possível carregar as inscrições.");
-      console.error("[Inscricoes] erro ao carregar:", err.response?.data || err.message);
     } finally {
       setLoading(false);
     }
@@ -66,7 +65,6 @@ export default function Inscricoes() {
       const available = data.filter((e) => !e.visibilidade || e.visibilidade === "publico");
       setEvents(available);
     } catch (err) {
-      console.error("[Inscricoes] erro ao carregar eventos:", err.response?.data || err.message);
       setEvents([]);
     } finally {
       setLoadingEvents(false);
@@ -227,7 +225,7 @@ export default function Inscricoes() {
                 const me = await api.get('/auth/me');
                 usuarioId = me.data?.usuario?.id_usuario || me.data?.usuario?.id || null;
               } catch (meErr) {
-                console.warn('[Inscricoes] não foi possível obter /auth/me antes do POST:', meErr?.response?.data || meErr.message);
+                // falha silenciosa ao obter /auth/me
               }
 
               const payload = {
@@ -246,7 +244,6 @@ export default function Inscricoes() {
             } catch (err) {
               const resp = err.response;
               const serverMsg = resp?.data?.erro || resp?.data?.message || err.message;
-              console.error('[Inscricoes] erro ao criar inscrição:', resp ? JSON.stringify(resp.data) : err.message, 'status:', resp?.status);
               setErro(serverMsg || 'Não foi possível criar a inscrição.');
             }
           }}
