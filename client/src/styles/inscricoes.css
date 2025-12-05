@@ -11,7 +11,34 @@
   padding: 18px;
   min-height: 100vh;
   width: 100%;
+  gap: 16px;
 }
+
+.inscricoes-header {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 12px;
+  position: relative;
+}
+.inscricoes-header h2 { margin: 0; font-size: 1.6rem; color: #2f1a14; font-weight: 900; text-align: center }
+.inscricoes-header-right { position: absolute; right: 0; top: 50%; transform: translateY(-50%); display:flex; gap:12px; align-items:center; }
+.btn-atualizar {
+  background: linear-gradient(180deg,#6d4c41,#5a382e);
+  color: #fff9f2;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(90,56,46,0.18);
+  font-weight: 800;
+  cursor: pointer;
+}
+.btn-atualizar.disabled, .btn-atualizar:disabled { opacity: 0.6; cursor: not-allowed; }
+.login-note { color: #a33; font-size: 0.95rem; }
 
 /* Lista de inscrições (usa cards parecidos com eventos) */
 .inscricoes-lista {
@@ -107,6 +134,62 @@
   text-align: center;
   color: #6d4c41;
 }
+
+/* Painéis para separar claramente eventos disponíveis e inscrições */
+.disponiveis-panel {
+  background-color: #3b1f12;
+  padding: 12px;
+  border-radius: 12px;
+  max-height: 360px;
+  overflow-y: auto;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+}
+
+/* Constrain panels to centered max width so background doesn't stretch full page */
+.disponiveis-panel,
+.minhas-panel {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* layout grid to place events panel next to registrations on wide screens */
+.panels-grid { width:100%; max-width:1100px; margin: 0 auto; display:block; padding-bottom: 8px; }
+@media (min-width: 1000px) {
+  /* make events panel wider and registrations content flexible; larger gaps for breathing room */
+  .panels-grid { display: grid; grid-template-columns: 560px 1fr; gap: 80px; align-items: start; }
+  .disponiveis-panel { max-height: 520px; }
+}
+
+/* inside the dark events panel, make inner event cards stand out */
+.disponiveis-panel .inscricoes-lista { max-width: 560px; margin: 0 auto; }
+.disponiveis-panel .inscricao-card { background: #fff3ea; border-left: none; border-radius: 8px; padding: 12px; }
+.disponiveis-panel .inscricao-card .titulo { color: #40231a; font-weight:900; }
+
+.disponiveis-panel .panel-title { text-align: center; color: #fdebdc; font-weight: 800; margin: 6px 0 12px 0; }
+.disponiveis-panel { padding-top: 18px; }
+
+/* ensure more vertical separation when stacked on small screens */
+.minhas-panel { margin-top: 36px; }
+@media (min-width: 1000px) {
+  .minhas-panel { margin-top: 0; }
+}
+
+/* make minhas cards more spacious and modern */
+.minhas-panel .inscricao-card { padding: 18px 22px; border-radius: 12px; box-shadow: 0 8px 28px rgba(22,22,22,0.06); }
+.minhas-panel .inscricao-left .titulo { font-size: 1rem; }
+.minhas-panel .inscricao-right { min-width: 140px; text-align: right; }
+.minhas-panel .status-pill { display: inline-block; background: #fff; color:#3e2723; padding:6px 10px; border-radius:10px; font-weight:700; box-shadow: 0 4px 12px rgba(90,56,46,0.08); }
+
+.minhas-panel {
+  background: transparent;
+  padding: 8px 0 0 0;
+}
+
+/* Reuse custom scroll style used in Eventos page */
+.disponiveis-panel::-webkit-scrollbar { width: 8px; }
+.disponiveis-panel::-webkit-scrollbar-thumb { background-color: #5a382e; border-radius: 6px; }
+.disponiveis-panel { scrollbar-width: thin; scrollbar-color: #5a382e transparent; }
 
 /* Responsividade */
 @media (max-width: 700px) {
