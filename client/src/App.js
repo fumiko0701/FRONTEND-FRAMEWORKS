@@ -14,6 +14,8 @@ const Home = lazy(() => import("./pages/Home"));
 const Eventos = lazy(() => import("./pages/Eventos"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
+const Perfil = lazy(() => import("./pages/Perfil"));
+
 const Inscricoes = lazy(() => import("./pages/Inscricoes"));
 
 function LoadingFallback() {
@@ -84,7 +86,13 @@ export default function App() {
 
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-
+              
+               <Route path="/perfil" element={ 
+                <PrivateRoute>
+                  <Perfil />
+                  </PrivateRoute>
+  }
+/>
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>

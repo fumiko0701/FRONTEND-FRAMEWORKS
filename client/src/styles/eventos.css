@@ -42,6 +42,7 @@
 .eventos-lista {
   list-style: none;
   padding: 0;
+  margin-top: 10px;
 }
 
 .evento-item {
@@ -223,4 +224,43 @@
   transform: rotate(10deg);
   z-index: 20;
   border: 2px solid #fff;
+}
+
+.evento-star {
+  font-size: 26px;
+  margin-right: 15px;
+  color: #FF9940;
+}
+
+.evento-info h3 {
+  margin: 0;
+  color: #733025;
+  font-size: 18px;
+}
+
+.descricao {
+  margin: 6px 0;
+  color: #785454;
+}
+
+.periodo {
+  font-size: 14px;
+  color: #836661;
+}
+
+.nenhum-evento {
+  color: #733025;
+  text-align: center;
+  margin-top: 20px;
+}
+
+
+/* ---------------- ERRO ---------------- */
+
+.erro-box {
+  background: #FFE5E5;
+  padding: 12px;
+  margin: 10px;
+  border-radius: 10px;
+  color: red;
 }
