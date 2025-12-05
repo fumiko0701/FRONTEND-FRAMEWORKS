@@ -161,7 +161,6 @@ export default function Eventos() {
       carregarEventos();
       carregarMeusEventos();
     } catch (err) {
-      console.error("Erro ao criar evento:", err);
       setErro(err.response?.data?.erro || "Erro ao criar evento.");
     }
   }

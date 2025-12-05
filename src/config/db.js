@@ -13,15 +13,15 @@ const RETRY_DELAY = 5000
 let pool = null
 
 function logAmigavel(msg) {
-  console.log(`\x1b[33m⚠️  ${msg}\x1b[0m`) // amarelo
+  // logs silenciados por solicitação do projeto
 }
 
 function logOk(msg) {
-  console.log(`\x1b[32m✅ ${msg}\x1b[0m`) // verde
+  // logs silenciados por solicitação do projeto
 }
 
 function logErro(msg) {
-  console.log(`\x1b[31m❌ ${msg}\x1b[0m`) // vermelho
+  // logs silenciados por solicitação do projeto
 }
 
 function createPool() {

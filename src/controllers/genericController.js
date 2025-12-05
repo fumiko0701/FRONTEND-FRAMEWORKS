@@ -88,7 +88,6 @@ export const IDQuery = async (id, ent) => {
     return [200, result.rows[0]]
 
   } catch (err) {
-    console.error(`IDQuery (${entidade}):`, err.message)
     return [500, { error: err.message }]
   }
 }
@@ -122,7 +121,6 @@ export const validarExistenciaAtiva = async (tabela, campoId, valor) => {
     return { ok: true }
 
   } catch (err) {
-    console.error("Erro validarExistenciaAtiva:", err)
     return {
       ok: false,
       status: 500,
