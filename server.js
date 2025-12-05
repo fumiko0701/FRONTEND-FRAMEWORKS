@@ -85,6 +85,4 @@ if (process.env.NODE_ENV === "production") {
 const PORT = process.env.PORT_BACKEND || 3005;
 const HOST = process.env.HOST_BACKEND || "localhost";
 
-app.listen(PORT, () => {
-  console.log(`Backend rodando em ${HOST}:${PORT}`);
-});
+app.listen(PORT, () => {});
