@@ -78,6 +78,8 @@ export const buscarInscricaoPorId = async (req, res) => {
 export const criarInscricao = async (req, res) => {
   const usuario = req.userId
   let { id_evento } = req.body
+  console.log('[criarInscricao] req.userId=', req.userId, 'req.userTipo=', req.userTipo)
+  console.log('[criarInscricao] payload inicial:', req.body)
 
   if (req.userTipo !== "organizador") {
     req.body.id_usuario = usuario

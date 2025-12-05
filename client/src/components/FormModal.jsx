@@ -124,9 +124,11 @@ export default function FormModal({
 
           {fields.map((f) => (
             <div key={f.name} style={{ display: "flex", flexDirection: "column" }}>
-              <label style={labelStyle}>{f.label}</label>
+              {f.type !== "hidden" && <label style={labelStyle}>{f.label}</label>}
 
-              {f.type === "remote-select" ? (
+              {f.type === "hidden" ? (
+                <input type="hidden" name={f.name} value={values[f.name]} />
+              ) : f.type === "remote-select" ? (
                 <RemoteSelect
                   field={f}
                   value={values[f.name]}
@@ -153,9 +155,10 @@ export default function FormModal({
                   type={f.type ?? "text"}
                   placeholder={f.placeholder ?? ""}
                   value={values[f.name]}
+                  readOnly={f.readOnly}
                   onChange={(e) => handleChange(e, f)}
                   onFocus={() => setActiveField(null)}
-                  style={inputStyle}
+                  style={{ ...inputStyle, background: f.readOnly ? "#111" : inputStyle.background }}
                 />
               )}
             </div>

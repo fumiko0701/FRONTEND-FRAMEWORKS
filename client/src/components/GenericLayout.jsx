@@ -1,10 +1,13 @@
 import React from "react";
 
-export default function GenericLayout({ left, center, right }) {
+export default function GenericLayout({ left, center, right, children }) {
+  // allow usage either by passing `center` prop or children inside the component
+  const centerContent = center ?? children;
+
   return (
     <div style={styles.container}>
       {left && <aside style={styles.left}>{left}</aside>}
-      {center && <main style={styles.center}>{center}</main>}
+      {centerContent && <main style={styles.center}>{centerContent}</main>}
       {right && <aside style={styles.right}>{right}</aside>}
     </div>
   );

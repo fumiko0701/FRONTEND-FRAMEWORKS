@@ -1,66 +1,115 @@
-/* Estilo para a página de Inscrições */
+/* ============================
+   Estilo para a página de Inscrições
+   Inspirado no visual da página de eventos
+   ============================ */
 
-/* Container principal */
+/* Container principal (quando usado) */
 .inscricoes-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
-  background-color: #f9f9f9;
+  padding: 18px;
   min-height: 100vh;
-}
-
-/* Título da página */
-.inscricoes-container h1 {
-  font-size: 2.5rem;
-  color: #333;
-  margin-bottom: 20px;
-}
-
-/* Mensagem de erro */
-.erro {
-  color: #ff4d4d;
-  font-weight: bold;
-  margin-bottom: 20px;
-}
-
-/* Cartões de inscrição */
-.inscricao-card {
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  margin: 10px 0;
   width: 100%;
-  max-width: 600px;
+}
+
+/* Lista de inscrições (usa cards parecidos com eventos) */
+.inscricoes-lista {
+  list-style: none;
+  padding: 0;
+  width: 100%;
+  max-width: 1100px;
+  display: grid;
+  gap: 12px;
+}
+
+.inscricao-card {
+  padding: 14px 16px;
+  background: #fff9f2;
+  border-left: 6px solid #6d4c41; /* destaque marrom */
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.10);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.inscricao-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 22px rgba(0,0,0,0.14);
+}
+
+.inscricao-left {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 6px;
+  flex: 1 1 auto;
 }
 
-.inscricao-card h2 {
-  font-size: 1.5rem;
-  color: #333;
+.inscricao-left .titulo {
+  margin: 0;
+  font-size: 18px;
+  color: #3e2723;
+  font-weight: 800;
 }
 
-.inscricao-card p {
-  font-size: 1rem;
-  color: #666;
+.inscricao-left .meta {
+  color: #4e342e;
+  font-size: 13px;
 }
 
-/* Botão de cancelar inscrição */
-.inscricao-card button {
-  background-color: #ff4d4d;
+.inscricao-right {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* botão de ação (inscrever, cancelar) */
+.inscricao-action {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.inscricao-action.ghost {
+  background: transparent;
+  color: #6d4c41;
+  border: 1px solid rgba(109,76,65,0.12);
+}
+
+.inscricao-action.warn {
+  background: #ffb74d;
+  color: #3e2723;
+  border: 1px solid #ff9800;
+}
+
+/* Botão principal coerente com eventos */
+.btn-primary {
+  background-color: #6d4c41;
   color: #fff;
   border: none;
-  border-radius: 4px;
-  padding: 10px 15px;
-  font-size: 1rem;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 0.95rem;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: transform 0.08s ease, background-color 0.12s ease;
+}
+.btn-primary:hover { background-color: #5a3f34; transform: translateY(-2px); }
+.btn-primary:active { transform: translateY(0); }
+
+/* Tipos de texto/estado */
+.inscricao-empty {
+  padding: 18px;
+  text-align: center;
+  color: #6d4c41;
 }
 
-.inscricao-card button:hover {
-  background-color: #e60000;
+/* Responsividade */
+@media (max-width: 700px) {
+  .inscricao-card { flex-direction: column; align-items: stretch; }
+  .inscricao-right { justify-content: flex-end; }
 }
